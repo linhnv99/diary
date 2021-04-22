@@ -16,7 +16,7 @@ public class Article extends AbsEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "is_favorite", columnDefinition = "TINYINT(1) default false")
+    @Column(name = "is_favorite", columnDefinition = "bit default false")
     private boolean isFavorite;
 
     @Column(name = "status", columnDefinition = "VARCHAR(20) default 'ACTIVE'")

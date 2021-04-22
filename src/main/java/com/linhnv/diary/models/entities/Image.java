@@ -18,7 +18,7 @@ public class Image {
     @Column(columnDefinition = "VARCHAR(500)")
     private String url;
 
-    @Column(columnDefinition = "VARCHAR(20) default 'ACTIVE'")
+    @Column(name = "status",columnDefinition = "VARCHAR(20) default 'ACTIVE'")
     private String status;
 
     @Column(name = "article_id", columnDefinition = "VARCHAR(64)")
