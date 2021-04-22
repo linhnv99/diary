@@ -44,23 +44,23 @@ public class API {
      * @param request
      * @return
      */
-    public boolean isSkipRequest(HttpServletRequest request) {
-        return isSkipPath(request.getRequestURI()) && isSkipMethod(request.getMethod());
+    public boolean isValidRequest(HttpServletRequest request) {
+        return isProcessableEndpoint(request.getRequestURI()) && isMethod(request.getMethod());
+    }
+
+    private boolean isProcessableEndpoint(String path) {
+        return this.pathPattern.matcher(path).matches();
     }
 
     public boolean isFindRequest(HttpServletRequest request) {
-        return isFindPath(request.getRequestURI()) && isSkipMethod(request.getMethod());
-    }
-
-    private boolean isSkipPath(String path) {
-        return this.pathPattern.matcher(path).matches();
+        return isFindPath(request.getRequestURI()) && isMethod(request.getMethod());
     }
 
     private boolean isFindPath(String path) {
         return path.contains(this.pathPattern.toString());
     }
 
-    private boolean isSkipMethod(String method) {
+    private boolean isMethod(String method) {
         if (this.methods == null || this.methods.length == 0) {
             return true;
         }

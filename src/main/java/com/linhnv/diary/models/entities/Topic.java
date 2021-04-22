@@ -15,10 +15,10 @@ public class Topic extends AbsEntity{
     @Column(columnDefinition = "VARCHAR(500)")
     private String description;
 
-    @Column(columnDefinition = "VARCHAR(20) default 'ACTIVE'")
+    @Column(name = "status", columnDefinition = "VARCHAR(20) default 'ACTIVE'")
     private String status;
 
-    @Column(name = "is_default", columnDefinition = "TINYINT(1) default false")
+    @Column(name = "is_default", columnDefinition = "bit default false")
     private boolean isDefault;
 
     public String getName() {
