@@ -3,9 +3,13 @@ package com.linhnv.diary.services.mappers;
 import com.linhnv.diary.models.bos.StatusEnum;
 import com.linhnv.diary.models.entities.Topic;
 import com.linhnv.diary.models.entities.UserTopic;
+import com.linhnv.diary.models.requests.TopicUpdateRq;
 import com.linhnv.diary.models.requests.TopicCreate;
 import com.linhnv.diary.models.responses.TopicResponse;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TopicMapper {
@@ -39,5 +43,21 @@ public class TopicMapper {
         userTopic.setTopicId(topicId);
 
         return userTopic;
+    }
+
+    public Topic map(TopicUpdateRq topicUpdateRq) {
+        Topic topic = new Topic();
+
+        topic.setName(topicUpdateRq.getName());
+        topic.setDescription(topicUpdateRq.getDescription());
+        topic.setStatus(StatusEnum.ACTIVE);
+
+        return topic;
+    }
+
+    public List<TopicResponse> map(List<Topic> topics) {
+        return topics.stream()
+                .map(this::map)
+                .collect(Collectors.toList());
     }
 }
