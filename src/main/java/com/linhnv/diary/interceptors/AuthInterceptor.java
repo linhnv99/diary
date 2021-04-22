@@ -2,8 +2,12 @@ package com.linhnv.diary.interceptors;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.linhnv.diary.models.bos.API;
+import com.linhnv.diary.models.bos.RoleEnum;
+import com.linhnv.diary.models.bos.UserJwt;
 import com.linhnv.diary.services.jwts.JwtDistribute;
+import com.linhnv.diary.utils.Global;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -23,10 +27,15 @@ public class AuthInterceptor implements HandlerInterceptor {
             API.with("^/accounts/registers$")
     };
 
+    public final API[] adminAuthAPIs = new API[]{
+            API.with("^/topics/defaults/changers$", HttpMethod.PUT)
+    };
+
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if(isSkipAuthAPI(request)) return true;
+        if (isSkipAuthAPI(request)) return true;
 
         DecodedJWT decodedJWT = jwtDistribute.authenticate(request, response);
         if (decodedJWT == null) {
@@ -35,12 +44,40 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        // Check role
+        String role = getRole(request);
+        if (isAdminAPI(request) && !RoleEnum.ADMIN.name().equals(role)) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().println("not permission");
+            return false;
+        }
+
         return true;
+    }
+
+    private String getRole(HttpServletRequest request) {
+
+        DecodedJWT decodedJWT;
+
+        try {
+            decodedJWT = (DecodedJWT) request.getAttribute(Global.USER_ATTR);
+        } catch (Exception e) {
+            return "";
+        }
+
+        return UserJwt.from(decodedJWT).getRole();
+    }
+
+    private boolean isAdminAPI(HttpServletRequest request) {
+        for (API adminAuthAPI : this.adminAuthAPIs) {
+            if (adminAuthAPI.isValidRequest(request)) return true;
+        }
+        return false;
     }
 
     private boolean isSkipAuthAPI(HttpServletRequest request) {
         for (API skipAuthAPI : this.skipAuthAPIs) {
-            if (skipAuthAPI.isSkipRequest(request)) return true;
+            if (skipAuthAPI.isValidRequest(request)) return true;
         }
         return false;
     }
