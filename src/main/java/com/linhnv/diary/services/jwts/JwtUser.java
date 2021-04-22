@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.linhnv.diary.models.bos.RoleEnum;
 import com.linhnv.diary.models.bos.UserJwt;
 import com.linhnv.diary.models.entities.User;
 import com.linhnv.diary.utils.Global;
@@ -88,7 +89,13 @@ public class JwtUser extends JwtService {
         }
 
         try (Jedis jedis = jedisPool.getResource()) {
-            String redisKey = toToken(UserJwt.from(decodedJWT).getId(), token);
+            UserJwt userJwt = UserJwt.from(decodedJWT);
+
+            int index = RoleEnum.USER.name().equals(userJwt.getRole()) ? defaultDB : 2;
+
+            jedis.select(index);
+
+            String redisKey = toToken(userJwt.getId(), token);
 
             boolean keyExists = jedis.exists(redisKey);
 
