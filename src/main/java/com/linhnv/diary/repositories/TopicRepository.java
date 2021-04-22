@@ -18,5 +18,4 @@ public interface TopicRepository extends JpaRepository<Topic, String> {
     @Modifying
     @Transactional
     void deleteById(String topicId);
-    Topic findByIdAndStatus(String topicId, String status);
 }
