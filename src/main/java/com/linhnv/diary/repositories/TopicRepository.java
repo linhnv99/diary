@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, String> {
@@ -18,4 +19,6 @@ public interface TopicRepository extends JpaRepository<Topic, String> {
     @Modifying
     @Transactional
     void deleteById(String topicId);
+
+    List<Topic> findByDefault(boolean isDefault);
 }

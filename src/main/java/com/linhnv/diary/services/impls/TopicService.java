@@ -172,6 +172,10 @@ public class TopicService implements ITopicService {
 
         List<Topic> topics = repository.findAllById(topicIds);
 
+        List<Topic> topicsDefault = repository.findByDefault(true);
+
+        topics.addAll(topicsDefault);
+
         List<TopicResponse> topicResponses = mapper.map(topics);
 
         return Response.ok(topicResponses);
