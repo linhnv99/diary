@@ -6,4 +6,5 @@ public interface StringResponse {
     String INVALID_PASSWORD = "Invalid password";
     String UNAUTHORIZED = "Unauthorized";
     String TOPIC_INVALID = "Topic isn't exists";
+    String INVALID_FEELING = "Feeling isn't exists";
 }
