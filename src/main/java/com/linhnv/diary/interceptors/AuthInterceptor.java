@@ -24,11 +24,14 @@ public class AuthInterceptor implements HandlerInterceptor {
     public final API[] skipAuthAPIs = new API[]{
             API.with("^/accounts/login$"),
             API.with("^/accounts/logout$"),
-            API.with("^/accounts/registers$")
+            API.with("^/accounts/registers$"),
+            API.with("^/feelings$", HttpMethod.GET)
     };
 
     public final API[] adminAuthAPIs = new API[]{
-            API.with("^/topics/defaults/changers$", HttpMethod.PUT)
+            API.with("^/topics/defaults/changers$", HttpMethod.PUT),
+            API.with("^/feelings$", HttpMethod.POST),
+            API.with("^/feelings$", HttpMethod.DELETE)
     };
 
 
