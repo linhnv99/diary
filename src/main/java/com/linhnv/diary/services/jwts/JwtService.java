@@ -19,7 +19,7 @@ public abstract class JwtService {
 
     public abstract Object getClaims(HttpServletRequest request);
 
-    public abstract String findToken(String userId);
+    public abstract String findToken(String userId, String role);
 
     public abstract DecodedJWT validateJWT(String token);
 
