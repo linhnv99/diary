@@ -91,7 +91,7 @@ public class JwtUser extends JwtService {
         try (Jedis jedis = jedisPool.getResource()) {
             UserJwt userJwt = UserJwt.from(decodedJWT);
 
-            int index = RoleEnum.USER.name().equals(userJwt.getRole()) ? defaultDB : 2;
+            int index = getDB(userJwt.getRole());
 
             jedis.select(index);
 
@@ -103,9 +103,18 @@ public class JwtUser extends JwtService {
         }
     }
 
+    private int getDB(String role) {
+        return RoleEnum.USER.name().equals(role) ? defaultDB : 2;
+    }
+
     @Override
-    public String findToken(String userId) {
+    public String findToken(String userId, String role) {
         try (Jedis jedis = jedisPool.getResource()) {
+
+            int index = getDB(role);
+
+            jedis.select(index);
+
             Collection<String> tokens = jedis.keys(userId + Global.SEPARATOR + "*");
 
             if (tokens.isEmpty()) {
@@ -127,7 +136,7 @@ public class JwtUser extends JwtService {
 
 
     public String findNGenerateToken(User user, String role) {
-        String token = findToken(user.getId());
+        String token = findToken(user.getId(), role);
 
         if (token.isEmpty()) {
             token = generateJWT(UserJwt.from(user, role));
