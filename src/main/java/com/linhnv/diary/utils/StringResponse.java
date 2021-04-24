@@ -7,4 +7,5 @@ public interface StringResponse {
     String UNAUTHORIZED = "Unauthorized";
     String TOPIC_INVALID = "Topic isn't exists";
     String INVALID_FEELING = "Feeling isn't exists";
+    String INVALID_ARTICLE = "Article isn't exists";
 }

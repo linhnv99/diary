@@ -83,7 +83,7 @@ public class TopicService implements ITopicService {
         if (!validate.getStatusCode().is2xxSuccessful())
             return validate;
 
-        topic = mapper.map(topicUpdateRq);
+        topic = mapper.map(topic, topicUpdateRq);
 
         repository.save(topic);
 
@@ -170,7 +170,7 @@ public class TopicService implements ITopicService {
 
         Set<String> topicIds = getTopicIdsFrom(userTopics);
 
-        List<Topic> topics = repository.findAllById(topicIds);
+        List<Topic> topics = repository.findAllByIdAndDefaultTrue(topicIds);
 
         List<TopicResponse> topicResponses = mapper.map(topics);
 
