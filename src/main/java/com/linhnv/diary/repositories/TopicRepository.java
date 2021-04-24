@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, String> {
@@ -20,5 +21,7 @@ public interface TopicRepository extends JpaRepository<Topic, String> {
     @Transactional
     void deleteById(String topicId);
 
-    List<Topic> findByDefault(boolean isDefault);
+    @Query("SELECT distinct t FROM Topic t WHERE (t.id in ?1 OR t.isDefault = true) AND t.status = 'ACTIVE'")
+    List<Topic> findAllByIdAndDefaultTrue(Set<String> topicIds);
+
 }
