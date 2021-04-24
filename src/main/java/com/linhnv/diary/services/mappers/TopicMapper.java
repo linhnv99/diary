@@ -45,8 +45,7 @@ public class TopicMapper {
         return userTopic;
     }
 
-    public Topic map(TopicUpdateRq topicUpdateRq) {
-        Topic topic = new Topic();
+    public Topic map(Topic topic, TopicUpdateRq topicUpdateRq) {
 
         topic.setName(topicUpdateRq.getName());
         topic.setDescription(topicUpdateRq.getDescription());
