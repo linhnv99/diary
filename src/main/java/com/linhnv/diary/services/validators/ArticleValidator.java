@@ -49,4 +49,13 @@ public class ArticleValidator {
         }
         return Response.ok();
     }
+
+    public ResponseEntity<SystemResponse<ArticleResponse>> validate(Article article, String userId) {
+
+        if (article == null) return Response.badRequest(StringResponse.INVALID_ARTICLE);
+
+        if (!article.getUserId().equals(userId)) return Response.badRequest(StringResponse.UNAUTHORIZED);
+
+        return Response.ok();
+    }
 }
