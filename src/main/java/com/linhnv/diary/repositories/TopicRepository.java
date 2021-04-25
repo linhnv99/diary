@@ -28,4 +28,5 @@ public interface TopicRepository extends JpaRepository<Topic, String> {
             "WHERE t.id IN ?1 AND t.status = ?2")
     List<Topic> findAllByIdAndStatus(Set<String> topics, String status);
 
+    List<Topic> findByStatus(String status);
 }

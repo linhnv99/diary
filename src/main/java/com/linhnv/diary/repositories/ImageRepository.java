@@ -19,4 +19,6 @@ public interface ImageRepository extends JpaRepository<Image, Integer> {
     void deleteByArticleId(String articleId);
 
     List<Image> findByArticleId(String articleId);
+
+    List<Image> findByStatus(String status);
 }
