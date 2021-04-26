@@ -1,9 +1,6 @@
 package com.linhnv.diary.services.impls;
 
-import com.linhnv.diary.models.bos.Response;
-import com.linhnv.diary.models.bos.StatusEnum;
-import com.linhnv.diary.models.bos.SystemResponse;
-import com.linhnv.diary.models.bos.UserJwt;
+import com.linhnv.diary.models.bos.*;
 import com.linhnv.diary.models.entities.*;
 import com.linhnv.diary.models.requests.ArticleRequest;
 import com.linhnv.diary.models.requests.ArticleUpdateRq;
@@ -45,6 +42,9 @@ public class ArticleService implements IArticleService {
     private ArticleTopicRepository articleTopicRepo;
 
     @Autowired
+    private FilterService filterService;
+
+    @Autowired
     private ArticleValidator validator;
 
     @Autowired
@@ -58,6 +58,9 @@ public class ArticleService implements IArticleService {
 
     @Autowired
     private JwtUser jwtUser;
+
+    @Autowired
+    private PagingService pagingService;
 
 
     @Override
@@ -177,6 +180,26 @@ public class ArticleService implements IArticleService {
         repository.deleteById(article.getId());
 
         return Response.ok();
+    }
+
+    @Override
+    public ResponseEntity<SystemResponse<Paging<List<ArticleResponse>>>> filter(FilterArticle filterArticle) {
+
+        UserJwt userJwt = (UserJwt) jwtUser.getClaims(filterArticle.getRequest());
+
+        filterArticle.setUserId(userJwt.getId());
+
+        Paging<List<Article>> paging = filterService.filter(filterArticle);
+
+        List<ArticleTopic> articleTopics = articleTopicRepo.findAll();
+
+        List<Topic> topics = topicRepository.findByStatus(StatusEnum.ACTIVE.name());
+
+        List<Image> images = imageRepository.findByStatus(StatusEnum.ACTIVE.name());
+
+        Paging<List<ArticleResponse>> pagingResponse = pagingService.map(paging, articleTopics, topics, images);
+
+        return Response.ok(pagingResponse);
     }
 
     private List<FileInfo> getImagesResponse(List<FileInfo> images, String articleId) {

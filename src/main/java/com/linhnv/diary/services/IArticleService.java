@@ -1,5 +1,7 @@
 package com.linhnv.diary.services;
 
+import com.linhnv.diary.models.bos.FilterArticle;
+import com.linhnv.diary.models.bos.Paging;
 import com.linhnv.diary.models.bos.SystemResponse;
 import com.linhnv.diary.models.requests.ArticleRequest;
 import com.linhnv.diary.models.requests.ArticleUpdateRq;
@@ -19,4 +21,6 @@ public interface IArticleService {
     ResponseEntity<SystemResponse<ArticleResponse>> getDetail(String articleId, HttpServletRequest request);
 
     ResponseEntity<SystemResponse<ArticleResponse>> delete(String articleId, HttpServletRequest request);
+
+    ResponseEntity<SystemResponse<Paging<List<ArticleResponse>>>> filter(FilterArticle filterArticle);
 }
